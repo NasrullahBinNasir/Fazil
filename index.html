@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg">
 <title>মাদ্রাসা পাঠশালা</title>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&family=Noto+Serif+Bengali:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&family=Noto+Serif+Bengali:wght@600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#F5F8F7;--sf:#fff;--ink:#16211E;--mu:#566663;--br:#0E5A4F;--bi:#fff;--gd:#9A6412;--gb:#FBEFD9;--ln:#D9E2DF;--rd:#B3261E}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1513;--sf:#16201D;--ink:#E6EEEB;--mu:#9DAEA9;--br:#3DB5A0;--bi:#06201B;--gd:#E8B357;--gb:#2B2414;--ln:#2A3733;--rd:#F2877F}}
@@ -65,6 +65,23 @@ nav button.on{color:var(--br);font-weight:600}
 .sheet{background:var(--sf);width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px))}
 .sheet h3{margin-top:0}
 .toast{position:fixed;left:16px;right:16px;bottom:80px;max-width:568px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:12px;padding:12px 16px;z-index:10}
+@font-face{font-family:'MuhammadiQ';src:url(muhammadiq.ttf) format('truetype');font-display:swap}
+.ph{background:var(--c);color:#fff;border-radius:18px;padding:14px 16px;margin:0 0 12px}
+.ph b{display:block;font:700 20px/1.4 "Noto Serif Bengali",serif}.ph small{opacity:.9}
+.dch{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px}
+.dchip{flex:none;border:2px solid var(--c);color:var(--c);background:transparent;border-radius:20px;padding:2px 14px;font-weight:600;min-height:38px}
+.dchip.on{background:var(--c);color:#fff}
+.sh2{display:flex;align-items:center;background:var(--c);color:#fff;border-radius:14px;padding:6px 14px;font-weight:700;font-size:18px;margin:4px 0 2px}
+.sh2 span{margin-left:auto;background:rgba(255,255,255,.25);border-radius:14px;padding:0 10px;font-size:15px}
+.qc{background:var(--sf);border:1px solid var(--ln);border-left:5px solid var(--c);border-radius:16px;margin-top:10px;overflow:hidden}
+.qh{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:12px;font-weight:700;line-height:1.55}
+.qh .no{flex:none;width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;font-size:14px;display:grid;place-items:center;margin-top:1px}
+.qh .qt{flex:1}
+.qb{background:color-mix(in srgb,var(--c) 10%,var(--sf));margin:0 10px 10px;border-radius:12px;padding:6px 12px}
+.qb .h{font-weight:700;color:var(--c);margin:12px 0 2px;padding-left:8px;border-left:4px solid var(--c)}
+.qb p{margin:2px 0 6px;text-align:justify}
+.ay{margin:8px 0;padding:8px;border-radius:12px;background:var(--sf);border:1px solid var(--c);text-align:center}
+.ay .ar{font:400 27px/2 'MuhammadiQ','Amiri','Noto Naskh Arabic',serif}.ay .rf{color:var(--mu);font-size:.9em}
 </style>
 </head>
 <body>
@@ -83,7 +100,7 @@ var DAYS=36500;              // কত দিনের অ্যাক্সে�
 /* ================================= */
 
 var db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-var S={loading:true,user:null,prof:null,papers:[],tab:"home",pid:null,sub:"guide",chapters:null,qs:null,ch:null,chBody:undefined,openQ:null,ans:{},mode:"login",pays:null,adm:"pay",admData:null,apid:null};
+var S={loading:true,user:null,prof:null,papers:[],tab:"home",pid:null,sub:"guide",chapters:null,qs:null,ch:null,chBody:undefined,openQ:null,ans:{},mode:"login",pays:null,adm:"pay",admData:null,apid:null,dv:null};
 function $(i){return document.getElementById(i)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function fd(d){return new Date(d).toLocaleDateString("bn-BD")}
@@ -91,6 +108,19 @@ function paid(){return !!(S.prof&&S.prof.paid_until&&new Date(S.prof.paid_until)
 function isAdm(){return !!(S.prof&&S.prof.is_admin)}
 function canSee(){return paid()||isAdm()}
 function toast(m){var t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},4000)}
+function clean(h){
+  var d=new DOMParser().parseFromString(h,"text/html"),ok={DIV:1,P:1,SPAN:1,B:1,STRONG:1,I:1,EM:1,BR:1,U:1,UL:1,OL:1,LI:1};
+  (function w(n){Array.prototype.slice.call(n.childNodes).forEach(function(c){
+    if(c.nodeType===1){
+      if(!ok[c.tagName]){c.remove();return}
+      Array.prototype.slice.call(c.attributes).forEach(function(a){if(["class","dir","lang"].indexOf(a.name)<0)c.removeAttribute(a.name)});
+      w(c);
+    }
+  })})(d.body);
+  return d.body.innerHTML;
+}
+function rich(s){return /<[a-z][^>]*>/i.test(s)?clean(s):lines(s)}
+function bn(n){return String(n).replace(/\d/g,function(x){return "০১২৩৪৫৬৭৮৯"[x]})}
 function lines(s){return esc(s).replace(/\n/g,"<br>")}
 
 /* ---------- ডেটা লোড ---------- */
@@ -98,7 +128,7 @@ async function loadProfile(){var r=await db.from("profiles").select("*").eq("id"
 async function loadPaper(pid){
   S.chapters=null;S.qs=null;
   var a=await db.from("chapters").select("id,title,is_free,sort").eq("paper_id",pid).order("sort").order("id");
-  var b=await db.from("questions").select("id,kind,year,question,is_free").eq("paper_id",pid).order("id");
+  var b=await db.from("questions").select("id,kind,year,question,is_free,div").eq("paper_id",pid).order("id");
   S.chapters=a.data||[];S.qs=b.data||[];draw();
 }
 async function loadPays(){var r=await db.from("payments").select("*").eq("user_id",S.user.id).order("created_at",{ascending:false});S.pays=r.data||[];draw()}
@@ -144,8 +174,8 @@ function lockCard(){return '<div class="lockcard"><p>এটি দেখতে �
 function paperV(){
   var p=S.papers.find(function(x){return x.id===S.pid});
   if(S.ch)return chapterV();
-  var h='<button class="back" data-a="home">← সব বিষয়</button><h3>'+esc(p?p.title:"")+'</h3><div class="chips">'+
-  [["guide","গাইড"],["qa","বিগত প্রশ্ন"],["sug","সাজেশন"]].map(function(t){return '<button class="chip'+(S.sub===t[0]?' on':'')+'" data-a="sub" data-t="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>';
+  var h='<button class="back" data-a="home">← সব বিষয়</button><div class="ph" style="--c:'+((p&&p.color)||'#0E5A4F')+'"><b>'+esc(p?p.title:"")+'</b><small>ফাজিল ৩য় বর্ষ</small></div><div class="chips">'+
+  [["qa","প্রশ্ন-উত্তর"],["guide","গাইড"],["sug","সাজেশন"]].map(function(t){return '<button class="chip'+(S.sub===t[0]?' on':'')+'" data-a="sub" data-t="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>';
   if(S.chapters===null)return h+'<p class="mu c">লোড হচ্ছে…</p>';
   if(S.sub==="guide"){
     if(!S.chapters.length)return h+'<p class="mu">এখনো কোনো অধ্যায় যোগ হয়নি।</p>';
@@ -154,16 +184,23 @@ function paperV(){
   var kind=S.sub==="qa"?"past":"suggestion";
   var list=S.qs.filter(function(q){return q.kind===kind});
   if(!list.length)return h+'<p class="mu">এখনো কিছু যোগ হয়নি।</p>';
-  return h+list.map(function(q){
-    var open=S.openQ===q.id;
-    var a='';
+  var c=(p&&p.color)||"#0E5A4F";
+  var dvs=[];list.forEach(function(q){var k=q.div||"";if(dvs.indexOf(k)<0)dvs.push(k)});
+  if(dvs.indexOf(S.dv)<0)S.dv=dvs[0];
+  var show=list.filter(function(q){return (q.div||"")===S.dv});
+  var out='<div style="--c:'+c+'">';
+  if(dvs.length>1)out+='<div class="dch">'+dvs.map(function(k){return '<button class="dchip'+(S.dv===k?' on':'')+'" data-a="dv" data-t="'+esc(k)+'">'+(k?esc(k)+' বিভাগ':'অন্যান্য')+'</button>'}).join('')+'</div>';
+  out+='<div class="sh2">'+(S.dv?esc(S.dv)+' বিভাগ':'প্রশ্ন')+'<span>'+bn(show.length)+'টি</span></div>';
+  out+=show.map(function(q,ix){
+    var open=S.openQ===q.id,a='';
     if(open){
-      if(!(q.id in S.ans))a='<div class="ans mu">লোড হচ্ছে…</div>';
-      else if(S.ans[q.id]===null)a='<div class="ans">'+lockCard()+'</div>';
-      else a='<div class="ans">'+lines(S.ans[q.id])+'</div>';
+      if(!(q.id in S.ans))a='<div class="qb mu">লোড হচ্ছে…</div>';
+      else if(S.ans[q.id]===null)a='<div class="qb">'+lockCard()+'</div>';
+      else a='<div class="qb">'+rich(S.ans[q.id])+'</div>';
     }
-    return '<button class="row" data-a="q" data-i="'+q.id+'" style="'+(open?'border-radius:14px 14px 0 0;margin-bottom:0':'')+'"><b>'+(q.year?esc(q.year)+' — ':'')+esc(q.question)+'</b>'+(q.is_free?'<span class="tag">ফ্রি</span>':(canSee()?'':'<span class="tag">🔒</span>'))+'</button>'+a+(open?'<div style="height:12px"></div>':'');
+    return '<div class="qc"><button class="qh" data-a="q" data-i="'+q.id+'"><span class="no">'+bn(ix+1)+'</span><span class="qt">'+(q.year?esc(q.year)+' — ':'')+esc(q.question)+'</span>'+(q.is_free?'<span class="tag">ফ্রি</span>':(canSee()?'':'<span class="tag">🔒</span>'))+'</button>'+a+'</div>';
   }).join('');
+  return h+out+'</div>';
 }
 function chapterV(){
   var h='<button class="back" data-a="cback">← অধ্যায় তালিকা</button><h3>'+esc(S.ch.title)+'</h3>';
@@ -194,7 +231,7 @@ function payAdm(){
   }).join('');
 }
 function contAdm(){
-  var h='<div class="chips">'+S.papers.map(function(p){return '<button class="chip'+(S.apid===p.id?' on':'')+'" data-a="apaper" data-i="'+p.id+'">'+esc(p.title)+'</button>'}).join('')+'</div>';
+  var h='<div class="box"><b>ইসলামিক স্টাডিজ ১ম পত্র</b><p class="mu">২৬টি প্রশ্ন-উত্তর একবার যোগ করুন।</p><div style="height:8px"></div><button class="btn sm" data-a="imp">প্রশ্ন-উত্তর আমদানি করুন</button></div>'+'<div class="chips">'+S.papers.map(function(p){return '<button class="chip'+(S.apid===p.id?' on':'')+'" data-a="apaper" data-i="'+p.id+'">'+esc(p.title)+'</button>'}).join('')+'</div>';
   if(S.chapters===null)return h+'<p class="mu c">লোড হচ্ছে…</p>';
   h+='<h2>নতুন অধ্যায়</h2><div class="box"><label for="ct">অধ্যায়ের নাম</label><input type="text" id="ct"><label for="cb">লেখা</label><textarea id="cb"></textarea><div class="chk"><input type="checkbox" id="cf"><label for="cf" style="margin:0">ফ্রি নমুনা (সবাই পড়তে পারবে)</label></div><div style="height:12px"></div><button class="btn solid" data-a="addch">অধ্যায় যোগ করুন</button></div>';
   h+=S.chapters.map(function(c){return '<div class="row"><b>'+esc(c.title)+'</b><span style="display:flex;gap:6px"><button class="btn sm" data-a="tfc" data-i="'+c.id+'" data-f="'+(c.is_free?1:0)+'">'+(c.is_free?'ফ্রি ✓':'পেইড')+'</button><button class="btn sm red" data-a="delc" data-i="'+c.id+'">মুছুন</button></span></div>'}).join('');
@@ -252,8 +289,9 @@ document.addEventListener("click",async function(e){
     return;
   }
   if(a==="home"){S.pid=null;S.ch=null;draw();return}
-  if(a==="paper"){S.pid=i;S.sub="guide";S.ch=null;S.openQ=null;S.ans={};loadPaper(i);window.scrollTo(0,0);return}
-  if(a==="sub"){S.sub=d.t;S.openQ=null;draw();return}
+  if(a==="paper"){S.pid=i;S.sub="qa";S.dv=null;S.ch=null;S.openQ=null;S.ans={};loadPaper(i);window.scrollTo(0,0);return}
+  if(a==="sub"){S.sub=d.t;S.openQ=null;S.dv=null;draw();return}
+  if(a==="dv"){S.dv=d.t;S.openQ=null;draw();return}
   if(a==="chapter"){openChapter(i);return}
   if(a==="cback"){S.ch=null;draw();return}
   if(a==="q"){toggleQ(i);return}
@@ -269,6 +307,24 @@ document.addEventListener("click",async function(e){
     toast("অনুমোদন হয়েছে");loadAdm();return;
   }
   if(a==="reject"){var u3=await db.from("payments").update({status:"rejected"}).eq("id",i);if(u3.error){toast(u3.error.message);return}loadAdm();return}
+  if(a==="imp"){
+    toast("আমদানি চলছে, একটু অপেক্ষা করুন…");
+    var jr=await fetch("islamic-studies.json");if(!jr.ok){toast("islamic-studies.json ফাইল পাওয়া যায়নি");return}
+    var jd=await jr.json();
+    var pp=S.papers.find(function(x){return x.title===jd.title});
+    if(!pp){toast("আগে SQL কোডটি চালিয়ে অ্যাপ রিলোড করুন");return}
+    var ex=await db.from("questions").select("id").eq("paper_id",pp.id).not("div","is",null).limit(1);
+    if(ex.error){toast(ex.error.message);return}
+    if(ex.data&&ex.data.length){toast("এগুলো আগেই যোগ করা আছে");return}
+    var rows=jd.items.map(function(x){return {paper_id:pp.id,kind:"past",question:x.q,is_free:false,div:x.div}});
+    var r1=await db.from("questions").insert(rows).select("id,question");
+    if(r1.error){toast(r1.error.message);return}
+    var map={};r1.data.forEach(function(x){map[x.question]=x.id});
+    var ans=jd.items.map(function(x){return {question_id:map[x.q],answer:x.a}});
+    var r2=await db.from("answers").insert(ans);
+    if(r2.error){toast(r2.error.message);return}
+    toast("২৬টি প্রশ্ন-উত্তর যোগ হয়েছে ✅");loadPaper(S.apid||pp.id);return;
+  }
   if(a==="addch"){
     var ti=$("ct").value.trim(),bo=$("cb").value.trim();if(!ti||!bo){toast("নাম ও লেখা দুটোই দিন");return}
     var ins=await db.from("chapters").insert({paper_id:S.apid,title:ti,is_free:$("cf").checked,sort:S.chapters.length+1}).select("id").single();
