@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E5A4F">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<title>মাদ্রাসা পাঠশালা</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&family=Noto+Serif+Bengali:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F8F7;--sf:#fff;--ink:#16211E;--mu:#566663;--br:#0E5A4F;--bi:#fff;--gd:#9A6412;--gb:#FBEFD9;--ln:#D9E2DF;--rd:#B3261E}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1513;--sf:#16201D;--ink:#E6EEEB;--mu:#9DAEA9;--br:#3DB5A0;--bi:#06201B;--gd:#E8B357;--gb:#2B2414;--ln:#2A3733;--rd:#F2877F}}
+:root[data-theme="dark"]{--bg:#0E1513;--sf:#16201D;--ink:#E6EEEB;--mu:#9DAEA9;--br:#3DB5A0;--bi:#06201B;--gd:#E8B357;--gb:#2B2414;--ln:#2A3733;--rd:#F2877F}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;padding-top:env(safe-area-inset-top,0px);background:var(--bg);color:var(--ink);font:16px/1.65 "Hind Siliguri",system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--gd);outline-offset:2px}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;max-width:600px;margin:0 auto}
+header b{font:700 19px "Noto Serif Bengali",serif;color:var(--br)}
+.pill{font-size:13px;border:1px solid var(--ln);border-radius:99px;padding:2px 12px;color:var(--mu);background:var(--sf)}
+main{max-width:600px;margin:0 auto;padding:4px 16px 110px}
+h2{font:700 19px "Noto Serif Bengali",serif;margin:24px 0 10px}
+h3{font:700 21px/1.4 "Noto Serif Bengali",serif;margin:6px 0 12px}
+.mu{color:var(--mu)}.c{text-align:center;padding:40px 0}
+.hero{background:var(--br);color:var(--bi);border-radius:22px;padding:24px 22px}
+.hero h1{font:700 26px/1.4 "Noto Serif Bengali",serif;margin:4px 0 8px}
+.hero p{margin:0 0 14px;opacity:.9}
+.btn{background:var(--gb);color:var(--gd);border:0;border-radius:12px;padding:11px 18px;font-weight:600;min-height:44px}
+.btn.solid{background:var(--br);color:var(--bi);width:100%}
+.btn.sm{padding:6px 14px;min-height:36px;font-size:14px}
+.btn.red{background:none;color:var(--rd);border:1px solid var(--rd)}
+.ok{display:inline-block;background:var(--gb);color:var(--gd);border-radius:99px;padding:4px 14px;font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.row b{font-weight:600}
+.row small{display:block;color:var(--mu);font-size:14px;font-weight:400}
+.tag{font-size:13px;font-weight:600;background:var(--gb);color:var(--gd);border-radius:8px;padding:2px 10px;white-space:nowrap}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px}
+.chip{border:1px solid var(--ln);background:var(--sf);border-radius:99px;padding:6px 16px;white-space:nowrap;min-height:40px}
+.chip.on{background:var(--br);color:var(--bi);border-color:var(--br)}
+.back{background:none;border:0;color:var(--br);font-weight:600;padding:8px 0;min-height:44px}
+.note{background:var(--sf);border:1px solid var(--ln);border-radius:16px;padding:16px 18px}
+.ans{background:var(--sf);border:1px solid var(--ln);border-top:0;border-radius:0 0 14px 14px;padding:12px 16px;margin:-12px 0 12px}
+.lockcard{background:var(--gb);border-radius:16px;padding:18px;text-align:center;margin:8px 0}
+.lockcard p{margin:0 0 12px;color:var(--gd);font-weight:500}
+.box{background:var(--sf);border:1px solid var(--ln);border-radius:16px;padding:16px;margin-bottom:12px}
+.box p{margin:4px 0 0}
+label{display:block;font-weight:500;margin-top:10px}
+input[type=text],input[type=email],input[type=password],select,textarea{width:100%;padding:11px 12px;border:1px solid var(--ln);border-radius:12px;background:var(--bg);margin-top:4px}
+textarea{min-height:110px;resize:vertical}
+.chk{display:flex;align-items:center;gap:8px;margin-top:10px}
+.chk input{width:20px;height:20px}
+.auth{padding-top:30px}
+.auth h1{font:700 30px/1.4 "Noto Serif Bengali",serif;color:var(--br);margin:0 0 4px}
+.link{background:none;border:0;color:var(--br);text-decoration:underline;padding:12px 0}
+.st-pending{color:var(--gd)}.st-approved{color:var(--br)}.st-rejected{color:var(--rd)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--sf);border-top:1px solid var(--ln);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav div{display:flex;width:100%;max-width:600px}
+nav button{flex:1;background:none;border:0;padding:8px 0;font-size:12px;color:var(--mu);min-height:56px;display:flex;flex-direction:column;align-items:center}
+nav button i{font-style:normal;font-size:20px;line-height:1.3}
+nav button.on{color:var(--br);font-weight:600}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:9}
+.sheet{background:var(--sf);width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px))}
+.sheet h3{margin-top:0}
+.toast{position:fixed;left:16px;right:16px;bottom:80px;max-width:568px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:12px;padding:12px 16px;z-index:10}
+</style>
+</head>
+<body>
+<header><b>মাদ্রাসা পাঠশালা</b><span class="pill">ফাজিল ৩য় বর্ষ</span></header>
+<main id="app"></main>
+<nav id="nbar"><div id="nav"></div></nav>
+<div id="layer"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ===== সেটিংস: এখানে বদলান ===== */
+var SUPABASE_URL="https://pwtgxdotwmjysnyonpze.supabase.co";
+var SUPABASE_KEY="sb_publishable_D3Yd4fHc48194KuMf5Y14w_36jHWliu";
+var BKASH="০১XXXXXXXXX";   // আপনার বিকাশ/নগদ নম্বর
+var PRICE=200;            // প্যাকেজের দাম (টাকা)
+var DAYS=30;              // কত দিনের অ্যাক্সেস
+/* ================================= */
+
+var db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var S={loading:true,user:null,prof:null,papers:[],tab:"home",pid:null,sub:"guide",chapters:null,qs:null,ch:null,chBody:undefined,openQ:null,ans:{},mode:"login",pays:null,adm:"pay",admData:null,apid:null};
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function fd(d){return new Date(d).toLocaleDateString("bn-BD")}
+function paid(){return !!(S.prof&&S.prof.paid_until&&new Date(S.prof.paid_until)>new Date())}
+function isAdm(){return !!(S.prof&&S.prof.is_admin)}
+function canSee(){return paid()||isAdm()}
+function toast(m){var t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},4000)}
+function lines(s){return esc(s).replace(/\n/g,"<br>")}
+
+/* ---------- ডেটা লোড ---------- */
+async function loadProfile(){var r=await db.from("profiles").select("*").eq("id",S.user.id).maybeSingle();S.prof=r.data}
+async function loadPaper(pid){
+  S.chapters=null;S.qs=null;
+  var a=await db.from("chapters").select("id,title,is_free,sort").eq("paper_id",pid).order("sort").order("id");
+  var b=await db.from("questions").select("id,kind,year,question,is_free").eq("paper_id",pid).order("id");
+  S.chapters=a.data||[];S.qs=b.data||[];draw();
+}
+async function loadPays(){var r=await db.from("payments").select("*").eq("user_id",S.user.id).order("created_at",{ascending:false});S.pays=r.data||[];draw()}
+async function loadAdm(){
+  var a=await db.from("payments").select("*").order("created_at",{ascending:false});
+  var b=await db.from("profiles").select("id,full_name,paid_until");
+  var m={};(b.data||[]).forEach(function(x){m[x.id]=x});
+  S.admData={pays:a.data||[],profs:m};draw();
+}
+async function openChapter(id){
+  S.ch=S.chapters.find(function(c){return c.id===id});S.chBody=undefined;draw();window.scrollTo(0,0);
+  var r=await db.from("chapter_bodies").select("body").eq("chapter_id",id).maybeSingle();
+  S.chBody=r.data?r.data.body:null;draw();
+}
+async function toggleQ(id){
+  if(S.openQ===id){S.openQ=null;draw();return}
+  S.openQ=id;draw();
+  if(!(id in S.ans)){var r=await db.from("answers").select("answer").eq("question_id",id).maybeSingle();S.ans[id]=r.data?r.data.answer:null;draw()}
+}
+
+/* ---------- স্ক্রিন ---------- */
+function authV(){
+  var su=S.mode==="signup";
+  return '<div class="auth"><h1>'+(su?'নতুন অ্যাকাউন্ট':'লগইন')+'</h1><p class="mu">ফাজিল ৩য় বর্ষের গাইড, বিগত প্রশ্ন ও সাজেশন</p>'+
+  (su?'<label for="nm">আপনার নাম</label><input type="text" id="nm" autocomplete="name">':'')+
+  '<label for="em">ইমেইল</label><input type="email" id="em" autocomplete="email">'+
+  '<label for="pw">পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label><input type="password" id="pw" autocomplete="'+(su?'new-password':'current-password')+'">'+
+  '<div style="height:16px"></div><button class="btn solid" data-a="auth">'+(su?'অ্যাকাউন্ট খুলুন':'লগইন করুন')+'</button>'+
+  '<button class="link" data-a="mode">'+(su?'আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন':'নতুন? অ্যাকাউন্ট খুলুন')+'</button></div>';
+}
+function statusBox(){
+  if(isAdm())return '<span class="ok">✓ অ্যাডমিন: সব খোলা</span>';
+  if(paid())return '<span class="ok">✓ অ্যাক্সেস চালু ('+fd(S.prof.paid_until)+' পর্যন্ত)</span>';
+  return '<button class="btn" data-a="pay">'+PRICE+' টাকায় সব খুলুন</button>';
+}
+function homeV(){
+  if(S.pid!==null)return paperV();
+  var nm=S.prof&&S.prof.full_name?S.prof.full_name:"";
+  return '<section class="hero"><p style="margin:0;opacity:.85;font-size:14px">আসসালামু আলাইকুম'+(nm?', '+esc(nm):'')+'</p><h1>পরীক্ষার আগে সব এক জায়গায়</h1><p>অনলাইন গাইড, বিগত বছরের প্রশ্ন-উত্তর ও সাজেশন।</p>'+statusBox()+'</section><h2>আপনার বিষয়</h2>'+
+  (S.papers.length?S.papers.map(function(p){return '<button class="row" data-a="paper" data-i="'+p.id+'"><b>'+esc(p.title)+'</b><span>›</span></button>'}).join(''):'<p class="mu">কোনো বিষয় নেই।</p>');
+}
+function lockCard(){return '<div class="lockcard"><p>এটি দেখতে সাবস্ক্রাইব করুন</p><button class="btn solid" data-a="pay">'+PRICE+' টাকায় অ্যাক্সেস নিন</button></div>'}
+function paperV(){
+  var p=S.papers.find(function(x){return x.id===S.pid});
+  if(S.ch)return chapterV();
+  var h='<button class="back" data-a="home">← সব বিষয়</button><h3>'+esc(p?p.title:"")+'</h3><div class="chips">'+
+  [["guide","গাইড"],["qa","বিগত প্রশ্ন"],["sug","সাজেশন"]].map(function(t){return '<button class="chip'+(S.sub===t[0]?' on':'')+'" data-a="sub" data-t="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>';
+  if(S.chapters===null)return h+'<p class="mu c">লোড হচ্ছে…</p>';
+  if(S.sub==="guide"){
+    if(!S.chapters.length)return h+'<p class="mu">এখনো কোনো অধ্যায় যোগ হয়নি।</p>';
+    return h+S.chapters.map(function(c){return '<button class="row" data-a="chapter" data-i="'+c.id+'"><b>'+esc(c.title)+'</b>'+(c.is_free?'<span class="tag">ফ্রি</span>':(canSee()?'':'<span class="tag">🔒</span>'))+'</button>'}).join('');
+  }
+  var kind=S.sub==="qa"?"past":"suggestion";
+  var list=S.qs.filter(function(q){return q.kind===kind});
+  if(!list.length)return h+'<p class="mu">এখনো কিছু যোগ হয়নি।</p>';
+  return h+list.map(function(q){
+    var open=S.openQ===q.id;
+    var a='';
+    if(open){
+      if(!(q.id in S.ans))a='<div class="ans mu">লোড হচ্ছে…</div>';
+      else if(S.ans[q.id]===null)a='<div class="ans">'+lockCard()+'</div>';
+      else a='<div class="ans">'+lines(S.ans[q.id])+'</div>';
+    }
+    return '<button class="row" data-a="q" data-i="'+q.id+'" style="'+(open?'border-radius:14px 14px 0 0;margin-bottom:0':'')+'"><b>'+(q.year?esc(q.year)+' — ':'')+esc(q.question)+'</b>'+(q.is_free?'<span class="tag">ফ্রি</span>':(canSee()?'':'<span class="tag">🔒</span>'))+'</button>'+a+(open?'<div style="height:12px"></div>':'');
+  }).join('');
+}
+function chapterV(){
+  var h='<button class="back" data-a="cback">← অধ্যায় তালিকা</button><h3>'+esc(S.ch.title)+'</h3>';
+  if(S.chBody===undefined)return h+'<p class="mu c">লোড হচ্ছে…</p>';
+  if(S.chBody===null)return h+lockCard();
+  return h+'<div class="note">'+lines(S.chBody)+'</div>';
+}
+function meV(){
+  var h='<h3>আমার অ্যাকাউন্ট</h3><div class="box"><b>'+esc(S.prof&&S.prof.full_name||"")+'</b><p class="mu">'+esc(S.user.email)+'</p></div><div class="box">'+statusBox()+'</div><h2>আমার পেমেন্ট</h2>';
+  if(S.pays===null)h+='<p class="mu">লোড হচ্ছে…</p>';
+  else if(!S.pays.length)h+='<p class="mu">এখনো কোনো পেমেন্টের অনুরোধ পাঠাননি।</p>';
+  else h+=S.pays.map(function(p){var st={pending:"যাচাই চলছে",approved:"অনুমোদিত",rejected:"বাতিল"}[p.status]||p.status;return '<div class="row"><b>'+esc(p.trx_id)+'<small>'+fd(p.created_at)+' · '+p.amount+' টাকা</small></b><span class="st-'+p.status+'">'+st+'</span></div>'}).join('');
+  return h+'<div style="height:12px"></div><button class="btn red" data-a="logout" style="width:100%">লগআউট</button>';
+}
+function admV(){
+  var h='<h3>অ্যাডমিন প্যানেল</h3><div class="chips"><button class="chip'+(S.adm==="pay"?' on':'')+'" data-a="adm" data-t="pay">পেমেন্ট</button><button class="chip'+(S.adm==="content"?' on':'')+'" data-a="adm" data-t="content">কনটেন্ট</button></div>';
+  return h+(S.adm==="pay"?payAdm():contAdm());
+}
+function payAdm(){
+  if(!S.admData)return '<p class="mu c">লোড হচ্ছে…</p>';
+  var L=S.admData.pays.slice().sort(function(a,b){return (a.status==="pending"?0:1)-(b.status==="pending"?0:1)});
+  if(!L.length)return '<p class="mu">কোনো পেমেন্টের অনুরোধ নেই।</p>';
+  return L.map(function(p){
+    var u=S.admData.profs[p.user_id]||{};
+    var st={pending:"যাচাই বাকি",approved:"অনুমোদিত",rejected:"বাতিল"}[p.status];
+    return '<div class="box"><b>'+esc(u.full_name||"নামহীন")+'</b> <span class="st-'+p.status+'">'+st+'</span><p>ট্রানজেকশন আইডি: <b>'+esc(p.trx_id)+'</b></p><p class="mu">'+fd(p.created_at)+' · '+p.amount+' টাকা</p>'+
+    (p.status==="pending"?'<div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" data-a="approve" data-i="'+p.id+'" data-u="'+p.user_id+'">অনুমোদন</button><button class="btn sm red" data-a="reject" data-i="'+p.id+'">বাতিল</button></div>':'')+'</div>';
+  }).join('');
+}
+function contAdm(){
+  var h='<div class="chips">'+S.papers.map(function(p){return '<button class="chip'+(S.apid===p.id?' on':'')+'" data-a="apaper" data-i="'+p.id+'">'+esc(p.title)+'</button>'}).join('')+'</div>';
+  if(S.chapters===null)return h+'<p class="mu c">লোড হচ্ছে…</p>';
+  h+='<h2>নতুন অধ্যায়</h2><div class="box"><label for="ct">অধ্যায়ের নাম</label><input type="text" id="ct"><label for="cb">লেখা</label><textarea id="cb"></textarea><div class="chk"><input type="checkbox" id="cf"><label for="cf" style="margin:0">ফ্রি নমুনা (সবাই পড়তে পারবে)</label></div><div style="height:12px"></div><button class="btn solid" data-a="addch">অধ্যায় যোগ করুন</button></div>';
+  h+=S.chapters.map(function(c){return '<div class="row"><b>'+esc(c.title)+'</b><span style="display:flex;gap:6px"><button class="btn sm" data-a="tfc" data-i="'+c.id+'" data-f="'+(c.is_free?1:0)+'">'+(c.is_free?'ফ্রি ✓':'পেইড')+'</button><button class="btn sm red" data-a="delc" data-i="'+c.id+'">মুছুন</button></span></div>'}).join('');
+  h+='<h2>নতুন প্রশ্ন</h2><div class="box"><label for="qk">ধরন</label><select id="qk"><option value="past">বিগত বছরের প্রশ্ন</option><option value="suggestion">সাজেশন</option></select><label for="qy">সাল (সাজেশনে ফাঁকা রাখতে পারেন)</label><input type="text" id="qy"><label for="qq">প্রশ্ন</label><textarea id="qq"></textarea><label for="qa">উত্তর</label><textarea id="qa"></textarea><div class="chk"><input type="checkbox" id="qf"><label for="qf" style="margin:0">ফ্রি নমুনা</label></div><div style="height:12px"></div><button class="btn solid" data-a="addq">প্রশ্ন যোগ করুন</button></div>';
+  h+=S.qs.map(function(q){return '<div class="row"><b>'+(q.kind==="past"?'বিগত':'সাজেশন')+': '+esc(q.question.slice(0,60))+'</b><span style="display:flex;gap:6px"><button class="btn sm" data-a="tfq" data-i="'+q.id+'" data-f="'+(q.is_free?1:0)+'">'+(q.is_free?'ফ্রি ✓':'পেইড')+'</button><button class="btn sm red" data-a="delq" data-i="'+q.id+'">মুছুন</button></span></div>'}).join('');
+  return h;
+}
+function draw(){
+  var app=$("app");
+  if(S.loading){app.innerHTML='<p class="mu c">লোড হচ্ছে…</p>';$("nbar").style.display="none";return}
+  if(!S.user){app.innerHTML=authV();$("nbar").style.display="none";return}
+  $("nbar").style.display="";
+  var v={home:homeV,me:meV,adm:admV};
+  app.innerHTML=v[S.tab]();
+  var t=[["home","🏠","হোম"],["me","👤","আমি"]];if(isAdm())t.push(["adm","🛠️","অ্যাডমিন"]);
+  $("nav").innerHTML=t.map(function(n){return '<button class="'+(S.tab===n[0]?'on':'')+'" data-a="tab" data-t="'+n[0]+'"><i>'+n[1]+'</i>'+n[2]+'</button>'}).join('');
+}
+function sheet(){
+  $("layer").innerHTML='<div class="ov" data-a="close"><div class="sheet" role="dialog" aria-label="সাবস্ক্রিপশন"><h3>'+PRICE+' টাকায় সব খুলুন</h3><p class="mu" style="margin:0 0 10px">'+DAYS+' দিনের জন্য সব অধ্যায়, প্রশ্ন-উত্তর ও সাজেশন।</p><ol class="mu" style="padding-left:20px;margin:0 0 8px"><li>বিকাশ/নগদ নম্বর: <b>'+esc(BKASH)+'</b> (পার্সোনাল)</li><li>'+PRICE+' টাকা সেন্ড মানি করুন</li><li>ট্রানজেকশন আইডি নিচে লিখুন</li></ol><label for="trx">ট্রানজেকশন আইডি</label><input type="text" id="trx" autocomplete="off"><div style="height:14px"></div><button class="btn solid" data-a="sendpay">অনুরোধ পাঠান</button></div></div>';
+}
+
+/* ---------- ক্লিক ও কাজ ---------- */
+document.addEventListener("click",async function(e){
+  var b=e.target.closest("[data-a]");if(!b)return;
+  var a=b.dataset.a,i=+b.dataset.i,d=b.dataset;
+  try{
+  if(a==="close"){if(e.target===b)$("layer").innerHTML="";return}
+  if(a==="pay"){sheet();return}
+  if(a==="mode"){S.mode=S.mode==="login"?"signup":"login";draw();return}
+  if(a==="auth"){
+    var em=$("em").value.trim(),pw=$("pw").value;
+    if(!em||pw.length<6){toast("ইমেইল দিন এবং ৬ অক্ষরের পাসওয়ার্ড দিন");return}
+    if(S.mode==="signup"){
+      var nm=$("nm").value.trim();if(!nm){toast("আপনার নাম লিখুন");return}
+      var r=await db.auth.signUp({email:em,password:pw,options:{data:{full_name:nm}}});
+      if(r.error){toast(r.error.message);return}
+      if(!r.data.session)toast("ইমেইলে পাঠানো লিংকে চাপ দিয়ে নিশ্চিত করুন, তারপর লগইন করুন");
+    }else{
+      var r2=await db.auth.signInWithPassword({email:em,password:pw});
+      if(r2.error){toast("ইমেইল বা পাসওয়ার্ড ভুল");return}
+    }
+    return;
+  }
+  if(a==="logout"){await db.auth.signOut();return}
+  if(a==="sendpay"){
+    var t=$("trx").value.trim();if(t.length<6){toast("সঠিক ট্রানজেকশন আইডি লিখুন");return}
+    var r3=await db.from("payments").insert({trx_id:t,amount:PRICE});
+    if(r3.error){toast("পাঠানো যায়নি: "+r3.error.message);return}
+    $("layer").innerHTML="";toast("অনুরোধ পাঠানো হয়েছে। যাচাই হলে অ্যাক্সেস চালু হবে।");S.pays=null;if(S.tab==="me")loadPays();return;
+  }
+  if(a==="tab"){
+    S.tab=d.t;S.pid=null;S.ch=null;S.openQ=null;draw();window.scrollTo(0,0);
+    if(d.t==="me")loadPays();
+    if(d.t==="adm"){S.admData=null;if(!S.apid&&S.papers.length)S.apid=S.papers[0].id;loadAdm();if(S.apid)loadPaper(S.apid)}
+    return;
+  }
+  if(a==="home"){S.pid=null;S.ch=null;draw();return}
+  if(a==="paper"){S.pid=i;S.sub="guide";S.ch=null;S.openQ=null;S.ans={};loadPaper(i);window.scrollTo(0,0);return}
+  if(a==="sub"){S.sub=d.t;S.openQ=null;draw();return}
+  if(a==="chapter"){openChapter(i);return}
+  if(a==="cback"){S.ch=null;draw();return}
+  if(a==="q"){toggleQ(i);return}
+  if(a==="adm"){S.adm=d.t;draw();return}
+  if(a==="apaper"){S.apid=i;loadPaper(i);return}
+  if(a==="approve"){
+    var pr=S.admData.profs[d.u]||{};var base=pr.paid_until&&new Date(pr.paid_until)>new Date()?new Date(pr.paid_until):new Date();
+    base.setDate(base.getDate()+DAYS);
+    var u1=await db.from("profiles").update({paid_until:base.toISOString()}).eq("id",d.u);
+    if(u1.error){toast(u1.error.message);return}
+    var u2=await db.from("payments").update({status:"approved"}).eq("id",i);
+    if(u2.error){toast(u2.error.message);return}
+    toast("অনুমোদন হয়েছে");loadAdm();return;
+  }
+  if(a==="reject"){var u3=await db.from("payments").update({status:"rejected"}).eq("id",i);if(u3.error){toast(u3.error.message);return}loadAdm();return}
+  if(a==="addch"){
+    var ti=$("ct").value.trim(),bo=$("cb").value.trim();if(!ti||!bo){toast("নাম ও লেখা দুটোই দিন");return}
+    var ins=await db.from("chapters").insert({paper_id:S.apid,title:ti,is_free:$("cf").checked,sort:S.chapters.length+1}).select("id").single();
+    if(ins.error){toast(ins.error.message);return}
+    var ib=await db.from("chapter_bodies").insert({chapter_id:ins.data.id,body:bo});
+    if(ib.error){toast(ib.error.message);return}
+    toast("অধ্যায় যোগ হয়েছে");loadPaper(S.apid);return;
+  }
+  if(a==="addq"){
+    var qq=$("qq").value.trim(),qa=$("qa").value.trim();if(!qq||!qa){toast("প্রশ্ন ও উত্তর দুটোই দিন");return}
+    var iq=await db.from("questions").insert({paper_id:S.apid,kind:$("qk").value,year:$("qy").value.trim()||null,question:qq,is_free:$("qf").checked}).select("id").single();
+    if(iq.error){toast(iq.error.message);return}
+    var ia=await db.from("answers").insert({question_id:iq.data.id,answer:qa});
+    if(ia.error){toast(ia.error.message);return}
+    toast("প্রশ্ন যোগ হয়েছে");loadPaper(S.apid);return;
+  }
+  if(a==="tfc"){await db.from("chapters").update({is_free:d.f!=="1"}).eq("id",i);loadPaper(S.apid);return}
+  if(a==="tfq"){await db.from("questions").update({is_free:d.f!=="1"}).eq("id",i);loadPaper(S.apid);return}
+  if(a==="delc"){if(confirm("অধ্যায়টি মুছে ফেলবেন?")){await db.from("chapters").delete().eq("id",i);loadPaper(S.apid)}return}
+  if(a==="delq"){if(confirm("প্রশ্নটি মুছে ফেলবেন?")){await db.from("questions").delete().eq("id",i);loadPaper(S.apid)}return}
+  }catch(err){toast("সমস্যা হয়েছে: "+err.message)}
+});
+
+/* ---------- শুরু ---------- */
+(async function(){
+  try{
+    var s=await db.auth.getSession();S.user=s.data.session?s.data.session.user:null;
+    var p=await db.from("papers").select("*").order("sort");S.papers=p.data||[];
+    if(S.user)await loadProfile();
+  }catch(err){}
+  S.loading=false;draw();
+  db.auth.onAuthStateChange(function(ev,ses){
+    setTimeout(async function(){
+      var u=ses?ses.user:null;
+      if((u?u.id:null)!==(S.user?S.user.id:null)){
+        S.user=u;S.prof=null;S.tab="home";S.pid=null;S.ch=null;S.pays=null;
+        if(u)await loadProfile();
+        draw();
+      }
+    },0);
+  });
+})();
+</script>
+</body>
+</html>
