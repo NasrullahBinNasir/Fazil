@@ -82,6 +82,10 @@ nav button.on{color:var(--br);font-weight:600}
 .qb p{margin:2px 0 6px;text-align:justify}
 .ay{margin:8px 0;padding:8px;border-radius:12px;background:var(--sf);border:1px solid var(--c);text-align:center}
 .ay .ar{font:400 27px/2 'MuhammadiQ','Amiri','Noto Naskh Arabic',serif}.ay .rf{color:var(--mu);font-size:.9em}
+.aq{display:block;direction:rtl;text-align:right;font:400 26px/2 'MuhammadiQ','Amiri','Noto Naskh Arabic',serif;margin-bottom:2px}
+.yr{display:inline-block;margin-bottom:2px;padding:0 8px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);font-weight:600;font-size:.8em}
+.ay .tr{margin:2px 0}
+.qb b{color:var(--c)}
 </style>
 </head>
 <body>
@@ -109,7 +113,7 @@ function isAdm(){return !!(S.prof&&S.prof.is_admin)}
 function canSee(){return paid()||isAdm()}
 function toast(m){var t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},4000)}
 function clean(h){
-  var d=new DOMParser().parseFromString(h,"text/html"),ok={DIV:1,P:1,SPAN:1,B:1,STRONG:1,I:1,EM:1,BR:1,U:1,UL:1,OL:1,LI:1};
+  var d=new DOMParser().parseFromString(h,"text/html"),ok={DIV:1,P:1,SPAN:1,SMALL:1,B:1,STRONG:1,I:1,EM:1,BR:1,U:1,UL:1,OL:1,LI:1};
   (function w(n){Array.prototype.slice.call(n.childNodes).forEach(function(c){
     if(c.nodeType===1){
       if(!ok[c.tagName]){c.remove();return}
@@ -128,7 +132,9 @@ async function loadProfile(){var r=await db.from("profiles").select("*").eq("id"
 async function loadPaper(pid){
   S.chapters=null;S.qs=null;
   var a=await db.from("chapters").select("id,title,is_free,sort").eq("paper_id",pid).order("sort").order("id");
-  var b=await db.from("questions").select("id,kind,year,question,is_free,div").eq("paper_id",pid).order("id");
+  var b=await db.from("questions").select("id,kind,year,question,is_free,div,sec,secc").eq("paper_id",pid).order("id");
+  S.err=(a.error?("অধ্যায়: "+a.error.message+" "):"")+(b.error?("প্রশ্ন: "+b.error.message):"");
+  if(b.error){b=await db.from("questions").select("id,kind,year,question,is_free").eq("paper_id",pid).order("id")}
   S.chapters=a.data||[];S.qs=b.data||[];draw();
 }
 async function loadPays(){var r=await db.from("payments").select("*").eq("user_id",S.user.id).order("created_at",{ascending:false});S.pays=r.data||[];draw()}
@@ -183,23 +189,32 @@ function paperV(){
   }
   var kind=S.sub==="qa"?"past":"suggestion";
   var list=S.qs.filter(function(q){return q.kind===kind});
-  if(!list.length)return h+'<p class="mu">এখনো কিছু যোগ হয়নি।</p>';
+  if(!list.length)return h+'<p class="mu">এখনো কিছু যোগ হয়নি।</p>'+(S.err?'<p style="color:#b91c1c;font-size:13px;word-break:break-word">ত্রুটি: '+esc(S.err)+'</p>':'<p class="mu" style="font-size:12px">(এই বিষয়ে মোট '+bn(S.qs.length)+'টি প্রশ্ন পাওয়া গেছে)</p>');
   var c=(p&&p.color)||"#0E5A4F";
   var dvs=[];list.forEach(function(q){var k=q.div||"";if(dvs.indexOf(k)<0)dvs.push(k)});
   if(dvs.indexOf(S.dv)<0)S.dv=dvs[0];
   var show=list.filter(function(q){return (q.div||"")===S.dv});
   var out='<div style="--c:'+c+'">';
-  if(dvs.length>1)out+='<div class="dch">'+dvs.map(function(k){return '<button class="dchip'+(S.dv===k?' on':'')+'" data-a="dv" data-t="'+esc(k)+'">'+(k?esc(k)+' বিভাগ':'অন্যান্য')+'</button>'}).join('')+'</div>';
-  out+='<div class="sh2">'+(S.dv?esc(S.dv)+' বিভাগ':'প্রশ্ন')+'<span>'+bn(show.length)+'টি</span></div>';
-  out+=show.map(function(q,ix){
-    var open=S.openQ===q.id,a='';
-    if(open){
-      if(!(q.id in S.ans))a='<div class="qb mu">লোড হচ্ছে…</div>';
-      else if(S.ans[q.id]===null)a='<div class="qb">'+lockCard()+'</div>';
-      else a='<div class="qb">'+rich(S.ans[q.id])+'</div>';
-    }
-    return '<div class="qc"><button class="qh" data-a="q" data-i="'+q.id+'"><span class="no">'+bn(ix+1)+'</span><span class="qt">'+(q.year?esc(q.year)+' — ':'')+esc(q.question)+'</span>'+(q.is_free?'<span class="tag">ফ্রি</span>':(canSee()?'':'<span class="tag">🔒</span>'))+'</button>'+a+'</div>';
-  }).join('');
+  if(dvs.length>1)out+='<div class="dch">'+dvs.map(function(k){return '<button class="dchip'+(S.dv===k?' on':'')+'" data-a="dv" data-t="'+esc(k)+'">'+(k?esc(k):'অন্যান্য')+'</button>'}).join('')+'</div>';
+  var secs=[];show.forEach(function(q){var k=q.sec||"";if(secs.indexOf(k)<0)secs.push(k)});
+  var no=0;
+  secs.forEach(function(sk){
+    var grp=show.filter(function(q){return (q.sec||"")===sk});
+    var sc=(grp[0]&&grp[0].secc)||c;
+    out+='<div style="--c:'+esc(sc)+'">';
+    if(sk||secs.length>1)out+='<div class="sh2">'+esc(sk||S.dv||"প্রশ্ন")+'<span>'+bn(grp.length)+'টি</span></div>';
+    out+=grp.map(function(q){
+      no++;
+      var open=S.openQ===q.id,a='';
+      if(open){
+        if(!(q.id in S.ans))a='<div class="qb mu">লোড হচ্ছে…</div>';
+        else if(S.ans[q.id]===null)a='<div class="qb">'+lockCard()+'</div>';
+        else a='<div class="qb">'+rich(S.ans[q.id])+'</div>';
+      }
+      return '<div class="qc"><button class="qh" data-a="q" data-i="'+q.id+'"><span class="no">'+bn(no)+'</span><span class="qt">'+(q.year?esc(q.year)+' — ':'')+rich(q.question)+'</span>'+(q.is_free?'<span class="tag">ফ্রি</span>':(canSee()?'':'<span class="tag">🔒</span>'))+'</button>'+a+'</div>';
+    }).join('');
+    out+='</div>';
+  });
   return h+out+'</div>';
 }
 function chapterV(){
@@ -231,7 +246,7 @@ function payAdm(){
   }).join('');
 }
 function contAdm(){
-  var h='<div class="box"><b>ইসলামিক স্টাডিজ ১ম পত্র</b><p class="mu">২৬টি প্রশ্ন-উত্তর একবার যোগ করুন।</p><div style="height:8px"></div><button class="btn sm" data-a="imp">প্রশ্ন-উত্তর আমদানি করুন</button></div>'+'<div class="chips">'+S.papers.map(function(p){return '<button class="chip'+(S.apid===p.id?' on':'')+'" data-a="apaper" data-i="'+p.id+'">'+esc(p.title)+'</button>'}).join('')+'</div>';
+  var h='<div class="box"><b>ইসলামিক স্টাডিজ ১ম পত্র</b><p class="mu">৩২টি প্রশ্ন-উত্তর (অনুবাদ, বড় ও ছোট প্রশ্ন) যোগ করুন।</p><div style="height:8px"></div><button class="btn sm" data-a="imp">প্রশ্ন-উত্তর আমদানি করুন</button></div>'+'<div class="chips">'+S.papers.map(function(p){return '<button class="chip'+(S.apid===p.id?' on':'')+'" data-a="apaper" data-i="'+p.id+'">'+esc(p.title)+'</button>'}).join('')+'</div>';
   if(S.chapters===null)return h+'<p class="mu c">লোড হচ্ছে…</p>';
   h+='<h2>নতুন অধ্যায়</h2><div class="box"><label for="ct">অধ্যায়ের নাম</label><input type="text" id="ct"><label for="cb">লেখা</label><textarea id="cb"></textarea><div class="chk"><input type="checkbox" id="cf"><label for="cf" style="margin:0">ফ্রি নমুনা (সবাই পড়তে পারবে)</label></div><div style="height:12px"></div><button class="btn solid" data-a="addch">অধ্যায় যোগ করুন</button></div>';
   h+=S.chapters.map(function(c){return '<div class="row"><b>'+esc(c.title)+'</b><span style="display:flex;gap:6px"><button class="btn sm" data-a="tfc" data-i="'+c.id+'" data-f="'+(c.is_free?1:0)+'">'+(c.is_free?'ফ্রি ✓':'পেইড')+'</button><button class="btn sm red" data-a="delc" data-i="'+c.id+'">মুছুন</button></span></div>'}).join('');
@@ -309,21 +324,30 @@ document.addEventListener("click",async function(e){
   if(a==="reject"){var u3=await db.from("payments").update({status:"rejected"}).eq("id",i);if(u3.error){toast(u3.error.message);return}loadAdm();return}
   if(a==="imp"){
     toast("আমদানি চলছে, একটু অপেক্ষা করুন…");
-    var jr=await fetch("islamic-studies.json");if(!jr.ok){toast("islamic-studies.json ফাইল পাওয়া যায়নি");return}
+    var jr=await fetch("islamic-studies.json?v="+Date.now(),{cache:"no-store"});if(!jr.ok){toast("islamic-studies.json ফাইল পাওয়া যায়নি");return}
     var jd=await jr.json();
     var pp=S.papers.find(function(x){return x.title===jd.title});
     if(!pp){toast("আগে SQL কোডটি চালিয়ে অ্যাপ রিলোড করুন");return}
-    var ex=await db.from("questions").select("id").eq("paper_id",pp.id).not("div","is",null).limit(1);
-    if(ex.error){toast(ex.error.message);return}
-    if(ex.data&&ex.data.length){toast("এগুলো আগেই যোগ করা আছে");return}
-    var rows=jd.items.map(function(x){return {paper_id:pp.id,kind:"past",question:x.q,is_free:false,div:x.div}});
-    var r1=await db.from("questions").insert(rows).select("id,question");
-    if(r1.error){toast(r1.error.message);return}
-    var map={};r1.data.forEach(function(x){map[x.question]=x.id});
-    var ans=jd.items.map(function(x){return {question_id:map[x.q],answer:x.a}});
+    var ex=await db.from("questions").select("id,sec").eq("paper_id",pp.id).not("div","is",null);
+    if(ex.error){toast("SQL ধাপটি আবার চালান: "+ex.error.message);return}
+    var old=ex.data||[];
+    if(old.length===jd.items.length&&old.every(function(x){return x.sec})){toast("এগুলো আগেই যোগ করা আছে");return}
+    if(old.length){
+      var ids=old.map(function(x){return x.id});
+      var d1=await db.from("answers").delete().in("question_id",ids);
+      if(d1.error){toast("পুরনো উত্তর মোছা যায়নি: "+d1.error.message);return}
+      var d2=await db.from("questions").delete().in("id",ids);
+      if(d2.error){toast("পুরনো প্রশ্ন মোছা যায়নি: "+d2.error.message);return}
+    }
+    var rows=jd.items.map(function(x){return {paper_id:pp.id,kind:"past",question:x.q,is_free:!!x.free,div:x.div,sec:x.sec,secc:x.secc}});
+    var r1=await db.from("questions").insert(rows).select("id");
+    if(r1.error){toast("প্রশ্ন যোগ হয়নি: "+r1.error.message);return}
+    var got=r1.data.map(function(x){return x.id}).sort(function(p,q){return p-q});
+    if(got.length!==jd.items.length){toast("সংখ্যা মেলেনি, স্ক্রিনশট পাঠান");return}
+    var ans=jd.items.map(function(x,k){return {question_id:got[k],answer:x.a}});
     var r2=await db.from("answers").insert(ans);
-    if(r2.error){toast(r2.error.message);return}
-    toast("২৬টি প্রশ্ন-উত্তর যোগ হয়েছে ✅");loadPaper(S.apid||pp.id);return;
+    if(r2.error){toast("উত্তর যোগ হয়নি: "+r2.error.message);return}
+    toast(bn(jd.items.length)+"টি প্রশ্ন-উত্তর যোগ হয়েছে ✅");S.ans={};loadPaper(pp.id);return;
   }
   if(a==="addch"){
     var ti=$("ct").value.trim(),bo=$("cb").value.trim();if(!ti||!bo){toast("নাম ও লেখা দুটোই দিন");return}
