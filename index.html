@@ -77,9 +77,9 @@ nav button.on{color:var(--br);font-weight:600}
 /* ===== সেটিংস: এখানে বদলান ===== */
 var SUPABASE_URL="https://pwtgxdotwmjysnyonpze.supabase.co";
 var SUPABASE_KEY="sb_publishable_D3Yd4fHc48194KuMf5Y14w_36jHWliu";
-var BKASH="০১XXXXXXXXX";   // আপনার বিকাশ/নগদ নম্বর
+var BKASH="01775531211";   // আপনার বিকাশ/নগদ নম্বর
 var PRICE=200;            // প্যাকেজের দাম (টাকা)
-var DAYS=30;              // কত দিনের অ্যাক্সেস
+var DAYS=36500;              // কত দিনের অ্যাক্সেস
 /* ================================= */
 
 var db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -131,7 +131,7 @@ function authV(){
 }
 function statusBox(){
   if(isAdm())return '<span class="ok">✓ অ্যাডমিন: সব খোলা</span>';
-  if(paid())return '<span class="ok">✓ অ্যাক্সেস চালু ('+fd(S.prof.paid_until)+' পর্যন্ত)</span>';
+  if(paid())return '<span class="ok">✓ '+(new Date(S.prof.paid_until).getFullYear()>2100?'আজীবন অ্যাক্সেস চালু':'অ্যাক্সেস চালু ('+fd(S.prof.paid_until)+' পর্যন্ত)')+'</span>';
   return '<button class="btn" data-a="pay">'+PRICE+' টাকায় সব খুলুন</button>';
 }
 function homeV(){
@@ -213,7 +213,7 @@ function draw(){
   $("nav").innerHTML=t.map(function(n){return '<button class="'+(S.tab===n[0]?'on':'')+'" data-a="tab" data-t="'+n[0]+'"><i>'+n[1]+'</i>'+n[2]+'</button>'}).join('');
 }
 function sheet(){
-  $("layer").innerHTML='<div class="ov" data-a="close"><div class="sheet" role="dialog" aria-label="সাবস্ক্রিপশন"><h3>'+PRICE+' টাকায় সব খুলুন</h3><p class="mu" style="margin:0 0 10px">'+DAYS+' দিনের জন্য সব অধ্যায়, প্রশ্ন-উত্তর ও সাজেশন।</p><ol class="mu" style="padding-left:20px;margin:0 0 8px"><li>বিকাশ/নগদ নম্বর: <b>'+esc(BKASH)+'</b> (পার্সোনাল)</li><li>'+PRICE+' টাকা সেন্ড মানি করুন</li><li>ট্রানজেকশন আইডি নিচে লিখুন</li></ol><label for="trx">ট্রানজেকশন আইডি</label><input type="text" id="trx" autocomplete="off"><div style="height:14px"></div><button class="btn solid" data-a="sendpay">অনুরোধ পাঠান</button></div></div>';
+  $("layer").innerHTML='<div class="ov" data-a="close"><div class="sheet" role="dialog" aria-label="সাবস্ক্রিপশন"><h3>'+PRICE+' টাকায় সব খুলুন</h3><p class="mu" style="margin:0 0 10px">'+(DAYS>=3650?'আজীবন অ্যাক্সেস: ':DAYS+' দিনের অ্যাক্সেস: ')+'সব অধ্যায়, প্রশ্ন-উত্তর ও সাজেশন।</p><ol class="mu" style="padding-left:20px;margin:0 0 8px"><li>বিকাশ/নগদ নম্বর: <b>'+esc(BKASH)+'</b> (পার্সোনাল)</li><li>'+PRICE+' টাকা সেন্ড মানি করুন</li><li>ট্রানজেকশন আইডি নিচে লিখুন</li></ol><label for="trx">ট্রানজেকশন আইডি</label><input type="text" id="trx" autocomplete="off"><div style="height:14px"></div><button class="btn solid" data-a="sendpay">অনুরোধ পাঠান</button></div></div>';
 }
 
 /* ---------- ক্লিক ও কাজ ---------- */
